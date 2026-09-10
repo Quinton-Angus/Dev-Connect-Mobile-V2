@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "Dev Connect",
+    "slug": "Dev-Connect",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/app_icon.png",
+    "android": {
+      "package": "com.quintondevstudios.devconnect"
+    },
+    "androidStatusBar": {
+      "backgroundColor": "#080808",
+      "barStyle": "light-content"
+    },
+    "plugins": [
+      "expo-font"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "45207ebb-21b1-412f-a5d3-418939333051"
+      }
+    }
+  }
+}
