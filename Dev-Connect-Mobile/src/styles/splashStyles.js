@@ -12,6 +12,13 @@ export default StyleSheet.create({
         backgroundColor: "#080808"
     },
 
+    screen: {
+        flex: 1,
+        backgroundColor: "#080808",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+
     splash_icon: {
         width: 50,
         height: 75

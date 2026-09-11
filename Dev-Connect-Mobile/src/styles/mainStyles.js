@@ -9,12 +9,12 @@ export default function useMainStyles() {
     return StyleSheet.create({
         safeAreaView: {
             flex: 1,
-            backgroundColor: colourScheme.backgroundColor
+            backgroundColor: colourScheme.background
         },
 
         screen: {
             flex: 1,
-            backgroundColor: colourScheme.backgroundColor,
+            backgroundColor: colourScheme.background,
             justifyContent: "center",
             alignItems: "center"
         }
