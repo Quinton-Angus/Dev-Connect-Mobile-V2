@@ -64,7 +64,7 @@ export default function rootLayout() {
 
     return (
         <ThemeContext.Provider value={{ colourScheme, theme, setTheme }}>
-            <Stack screenOptions={{headerShown: false}} />
+            <Stack screenOptions={{headerShown: false, animation: "none"}} />
         </ThemeContext.Provider>
     )
         

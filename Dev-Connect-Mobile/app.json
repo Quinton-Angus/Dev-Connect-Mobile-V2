@@ -14,7 +14,15 @@
       "barStyle": "light-content"
     },
     "plugins": [
-      "expo-font"
+      "expo-font",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#080808",
+          "image": "./src/assets/splash_screen_icon.png",
+          "imageWidth": "50"
+        }
+      ]
     ],
     "extra": {
       "eas": {
