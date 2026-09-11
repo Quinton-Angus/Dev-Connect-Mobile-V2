@@ -6,7 +6,7 @@ import colours from "../constants/colours"
 
 export const theme_context = createContext({})
 
-export const theme_provider = ({ Children }) => {
+export const theme_provider = ({ children }) => {
     const [theme, set_theme] = useState(Appearance.getColorScheme())
 
     const colour_scheme = theme === "dark" ? colours.dark : colours.light
