@@ -2,6 +2,7 @@ import { useFonts } from "expo-font"
 import { Stack } from "expo-router"
 import * as SplashScreen from "expo-splash-screen"
 import { useEffect } from "react"
+import { theme_provider } from "../context/theme_context"
 
 import regular from "../assets/fonts/Inter_18pt-Regular.ttf"
 import light from "../assets/fonts/Inter_18pt-Light.ttf"
@@ -39,8 +40,10 @@ export default function rootLayout() {
             return null
         }
 
-        return <Stack screenOptions={{
-            headerShown: false,
-
-        }}/>
+        return (
+            <theme_provider>
+                <Stack screenOptions={{headerShown: false}} />
+            </theme_provider>
+        )
+        
 }

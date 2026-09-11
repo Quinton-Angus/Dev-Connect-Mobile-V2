@@ -2,6 +2,7 @@
   "expo": {
     "name": "Dev Connect",
     "slug": "Dev-Connect",
+    "scheme": "devconnect",
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./src/assets/app_icon.png",

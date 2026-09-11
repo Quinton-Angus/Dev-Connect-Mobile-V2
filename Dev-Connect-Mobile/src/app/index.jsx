@@ -4,8 +4,9 @@ import splash_styles from "../styles/splash_styles.js"
 import { SafeAreaView } from "react-native-safe-area-context";
 import splash_logo from "../assets/splash_screen_logo.png"
 import { useEffect, useRef } from "react";
+import boot from "../scripts/boot.js"
 
-export default function login() {
+export default function index() {
 
     const spinnerRotation = useRef(new Animated.Value(0)).current
 
@@ -25,6 +26,8 @@ export default function login() {
         )
 
         spinnerAnimation.start()
+
+        boot()
 
         return () => {
             spinnerAnimation.stop()

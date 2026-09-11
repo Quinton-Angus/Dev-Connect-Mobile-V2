@@ -1,6 +1,12 @@
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
+
+    splash_screen: {
+        flex: 1,
+        backgroundColor: "#080808"
+    },
+
     splash_icon: {
         width: 50,
         height: 75
