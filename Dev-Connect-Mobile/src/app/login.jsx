@@ -1,10 +1,10 @@
 import { View } from "react-native";
 import { useContext } from "react";
-import { theme_context } from "../context/theme_context";
+import { ThemeContext } from "./_layout";
 
 export default function login() {
 
-    const { theme, set_theme, colorscheme } = useContext(theme_context)
+    const { colorsScheme } = useContext(ThemeContext)
 
     return ( <View /> )
 }

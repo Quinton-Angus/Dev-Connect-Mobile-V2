@@ -1,4 +1,4 @@
-colours = {
+const colours = {
     light: {
         background: "#FFFFFF",
         primary: "#080808",
@@ -12,6 +12,6 @@ colours = {
         secondary: "#606060",
         tertiary: "#121212"
     }
-}
+};
 
-export default colours
+export default colours;

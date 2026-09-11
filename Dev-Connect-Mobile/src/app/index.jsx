@@ -1,6 +1,5 @@
 import { View, Image, Animated, Easing } from "react-native";
-import main_styles from "../styles/main_styles.js"
-import splash_styles from "../styles/splash_styles.js"
+import splashStyles from "../styles/splashStyles.js"
 import { SafeAreaView } from "react-native-safe-area-context";
 import splash_logo from "../assets/splash_screen_logo.png"
 import { useEffect, useRef } from "react";
@@ -40,13 +39,13 @@ export default function index() {
     })
 
     return (
-        <SafeAreaView style={main_styles.safeAreaView}>
-            <View style={main_styles.screen}>
-                <View style={splash_styles.logo_container}>
-                    <Image source={splash_logo} style={splash_styles.splash_icon} />
+        <SafeAreaView style={splashStyles.safeAreaView}>
+            <View style={splashStyles.screen}>
+                <View style={splashStyles.logo_container}>
+                    <Image source={splash_logo} style={splashStyles.splash_icon} />
                 </View>
-                <Animated.View style={[splash_styles.spinner_container, {transform: [{rotate}]}]}>
-                    <View style={splash_styles.spinner} />
+                <Animated.View style={[splashStyles.spinner_container, {transform: [{rotate}]}]}>
+                    <View style={splashStyles.spinner} />
                 </Animated.View>
             </View>
         </SafeAreaView>
