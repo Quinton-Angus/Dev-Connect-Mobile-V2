@@ -6,6 +6,7 @@
     "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./src/assets/app_icon.png",
+    "backgroundColor": "#080808",
     "android": {
       "package": "com.quintondevstudios.devconnect"
     },
