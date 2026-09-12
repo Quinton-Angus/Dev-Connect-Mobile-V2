@@ -6,15 +6,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useState, createContext } from "react"
 import { Appearance } from "react-native"
 import colours from "../constants/colours"
-import regular from "../assets/fonts/Inter_18pt-Regular.ttf"
-import light from "../assets/fonts/Inter_18pt-Light.ttf"
-import extra_light from "../assets/fonts/Inter_18pt-ExtraLight.ttf"
-import thin from "../assets/fonts/Inter_18pt-Thin.ttf"
-import medium from "../assets/fonts/Inter_18pt-Medium.ttf"
-import semi_bold from "../assets/fonts/Inter_18pt-SemiBold.ttf"
-import bold from "../assets/fonts/Inter_18pt-Bold.ttf"
-import extra_bold from "../assets/fonts/Inter_18pt-ExtraBold.ttf"
-import black from "../assets/fonts/Inter_18pt-Black.ttf"
+import {
+    Inter_100Thin,
+    Inter_200ExtraLight,
+    Inter_300Light,
+    Inter_400Regular,
+    Inter_500Medium,
+    Inter_600SemiBold,
+    Inter_700Bold,
+    Inter_800ExtraBold,
+    Inter_900Black
+} from "@expo-google-fonts/inter"
 
 export const ThemeContext = createContext({})
 
@@ -24,15 +26,15 @@ export default function rootLayout() {
     const [theme, setTheme] = useState("light")
 
     const [fontsLoaded] = useFonts({
-        inter_thin: thin,
-        inter_extra_light: extra_light,
-        inter_light: light,
-        inter_regular: regular,
-        inter_medium: medium,
-        inter_semi_bold: semi_bold,
-        inter_bold: bold,
-        inter_extra_bold: extra_bold,
-        inter_black: black  
+        inter_thin: Inter_100Thin,
+        inter_extra_light: Inter_200ExtraLight,
+        inter_light: Inter_300Light,
+        inter_regular: Inter_400Regular,
+        inter_medium: Inter_500Medium,
+        inter_semi_bold: Inter_600SemiBold,
+        inter_bold: Inter_700Bold,
+        inter_extra_bold: Inter_800ExtraBold,
+        inter_black: Inter_900Black  
     })
 
     useEffect(() => {
