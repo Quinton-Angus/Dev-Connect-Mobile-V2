@@ -80,6 +80,15 @@ export default () => {
             fontFamily: "inter_medium",
             fontSize: 10,
             color: colourScheme.background,
+        },
+
+        loadingSpinner: {
+            width: 15,
+            height: 15,
+            borderWidth: 1,
+            borderColor: colourScheme.contrast,
+            borderRadius: 25,
+            borderTopColor: colourScheme.background
         }
 
 
