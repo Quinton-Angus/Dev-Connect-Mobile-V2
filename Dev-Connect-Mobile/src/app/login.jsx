@@ -33,6 +33,8 @@ export default function login() {
 
     const spinnerRotation = useRef(new Animated.Value(0)).current
 
+    const [ loading, setLoading] = useState(false)
+
 
     useEffect(() => {
         const spinnerAnimation = Animated.loop(
@@ -54,7 +56,7 @@ export default function login() {
         return () => {
             spinnerAnimation.stop()
         }
-    }, [])
+    }, [loading])
 
     const rotate = spinnerRotation.interpolate({
         inputRange: [0,1],
@@ -63,10 +65,8 @@ export default function login() {
 
 
 
-
-    const [ loading, setLoading] = useState(false)
-    const [ email, setEmail] = useState()
-    const [ password, setPassword ] = useState()
+    const [ email, setEmail] = useState("")
+    const [ password, setPassword ] = useState("")
 
     return (
         <Screen>
@@ -84,7 +84,7 @@ export default function login() {
                             <Text style={loginStyles.inputText}>Password</Text>
                             <TextInput style={loginStyles.input} value={password} onChangeText={setPassword} secureTextEntry></TextInput>
                         </View>
-                        <Pressable style={loginStyles.loginBtn} onPress={() => {login(setLoading, email, password)}}>
+                        <Pressable style={loginStyles.loginBtn} onPress={() => {login(setLoading, email, password)}} disabled={loading}>
                             { loading === false ? (<Text style={loginStyles.loginBtnText}>Login</Text>) : (<Animated.View style={[ loginStyles.loadingSpinner , { transform: [{rotate}] }]} />)}
                         </Pressable>
                     </View>
