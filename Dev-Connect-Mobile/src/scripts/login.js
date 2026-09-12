@@ -1,5 +1,7 @@
 import { router } from "expo-router"
 import * as secureStore from "expo-secure-store"
+import { File, Directory, Paths } from "expo-file-system"
+import * as FileSystem from "expo-file-system/legacy"
 
 export function loginScript() {
     return async function login(setLoading, email, password) {
@@ -14,7 +16,7 @@ export function loginScript() {
             method: "POST",
             headers: {"Content-Type" : "application/json"},
             body: JSON.stringify({
-                email: email,
+                email: email.toLowerCase(),
                 password: password
             })
         })
@@ -50,6 +52,25 @@ export function loginScript() {
             })
 
             const accountData = await data.json()
+
+            const name = accountData.data.name
+            const email = accountData.data.email
+
+            await secureStore.setItemAsync("name", name)
+            await secureStore.setItemAsync("email", email)
+
+            // Generate JS loaction of app data and create the appData directory (folder)
+
+            const appData = new Directory(Paths.document, "appData")
+
+            appData.create({
+                idempotent: true,
+                intermediates: true
+            })
+
+            await FileSystem.downloadAsync(accountData.data.profilePhotoUrl, `${appData.uri}/profilePhoto.png`)
+
+            router.replace("/test")
 
         }
 
