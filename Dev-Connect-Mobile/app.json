@@ -23,7 +23,8 @@
           "image": "./src/assets/splash_screen_logo.png",
           "imageWidth": "50"
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "extra": {
       "eas": {

@@ -1,3 +1,6 @@
+import { router } from "expo-router"
+import * as secureStore from "expo-secure-store"
+
 export function loginScript() {
     return async function login(setLoading, email, password) {
         
@@ -33,7 +36,21 @@ export function loginScript() {
         } else {
             console.log("Account authentication successful, continuing with login script.")
 
-            // Continue login script here.
+            const token = accountResponse.data.appToken
+
+            await secureStore.setItemAsync("appToken", accountResponse.data.appToken)
+
+            router.push("/loading")
+
+            // Get account data including secure link to Pfp
+
+            const data = await fetch("https://api.quintondev.com/v1/connect/mobile/account/data", {
+                method: "POST",
+                headers: {"Content-Type":"application/json", "Authorization": token}
+            })
+
+            const accountData = await data.json()
+
         }
 
     }

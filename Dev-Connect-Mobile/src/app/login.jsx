@@ -26,7 +26,7 @@ export default function login() {
     const login = loginScript()
 
     useEffect(() => {
-        setTheme("light")
+        setTheme("dark")
     }, [])
 
 
