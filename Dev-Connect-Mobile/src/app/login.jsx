@@ -16,6 +16,7 @@ import { loginScript } from "../scripts/login"
 import { useRef } from "react";
 import { Animated } from "react-native";
 import { Easing } from "react-native";
+import githubOauthScript from "../scripts/githubOauth"
 
 export default function login() {
 
@@ -72,13 +73,13 @@ export default function login() {
                         <Text style={loginStyles.loginSubTitle}>Log in to your Dev Connect account to continue.</Text>
                         <View style={loginStyles.loginInputWrapper}>
                             <Text style={loginStyles.inputText}>Email</Text>
-                            <TextInput style={loginStyles.input} onChangeText={setEmail} value={email}></TextInput>
+                            <TextInput style={loginStyles.input} onChangeText={setEmail} value={email} autoComplete="email"></TextInput>
                         </View>
                         <View style={loginStyles.loginInputWrapper}>
                             <Text style={loginStyles.inputText}>Password</Text>
-                            <TextInput style={loginStyles.input} value={password} onChangeText={setPassword} secureTextEntry></TextInput>
+                            <TextInput style={loginStyles.input} value={password} onChangeText={setPassword} secureTextEntry autoComplete="password"></TextInput>
                         </View>
-                        <Pressable style={loginStyles.loginBtn} onPress={() => {login(setLoading, email, password)}} disabled={loading}>
+                        <Pressable style={loginStyles.loginBtn} onPress={() => {githubOauthScript()}} disabled={loading}>
                             { loading === false ? (<Text style={loginStyles.loginBtnText}>Login</Text>) : (<Animated.View style={[ loginStyles.loadingSpinner , { transform: [{rotate}] }]} />)}
                         </Pressable>
                     </View>
@@ -88,3 +89,4 @@ export default function login() {
         </Screen>
     )
 }
+
