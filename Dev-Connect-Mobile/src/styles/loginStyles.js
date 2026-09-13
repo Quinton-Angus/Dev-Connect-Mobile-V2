@@ -11,7 +11,7 @@ export default () => {
             flex: 1,
             justifyContent: "flex-start",
             alignItems: "center",
-            marginTop: 60,
+            marginTop: 50,
         },
 
         loginWrapper: {

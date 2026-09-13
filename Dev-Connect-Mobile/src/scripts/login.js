@@ -2,6 +2,7 @@ import { router } from "expo-router"
 import * as secureStore from "expo-secure-store"
 import { File, Directory, Paths } from "expo-file-system"
 import * as FileSystem from "expo-file-system/legacy"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export function loginScript() {
     return async function login(setLoading, email, password) {
@@ -42,6 +43,11 @@ export function loginScript() {
 
             await secureStore.setItemAsync("appToken", accountResponse.data.appToken)
 
+            await AsyncStorage.setItem("linked", "true")
+
+            setLoading(false)
+
+
             router.push("/loading")
 
             // Get account data including secure link to Pfp
@@ -70,7 +76,7 @@ export function loginScript() {
 
             await FileSystem.downloadAsync(accountData.data.profilePhotoUrl, `${appData.uri}/profilePhoto.png`)
 
-            router.replace("/test")
+            router.replace("/dash")
 
         }
 

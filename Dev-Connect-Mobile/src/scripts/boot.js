@@ -8,7 +8,7 @@ export default async function boot() {
     ])
 
     if (linked === "true") {
-        router.replace("/dashboard")
+        router.replace("/dash")
     } else {
         router.replace("/login")
     }

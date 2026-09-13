@@ -40,7 +40,7 @@ export default function index() {
     })
 
     return (
-        <LinearGradient style={splashStyles.screen} colors={["#313131", "#080808"]}>
+        <View style={splashStyles.screen}>
             <SafeAreaView style={splashStyles.safeAreaView}>
                 <View style={splashStyles.screen}>
                     <View style={splashStyles.logo_container}>
@@ -51,6 +51,6 @@ export default function index() {
                     </Animated.View>
                 </View>
             </SafeAreaView>
-        </LinearGradient>
+        </View>
     )
 }

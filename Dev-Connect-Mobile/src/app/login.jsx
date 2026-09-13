@@ -25,12 +25,6 @@ export default function login() {
 
     const login = loginScript()
 
-    useEffect(() => {
-        setTheme("dark")
-    }, [])
-
-
-
     const spinnerRotation = useRef(new Animated.Value(0)).current
 
     const [ loading, setLoading] = useState(false)
