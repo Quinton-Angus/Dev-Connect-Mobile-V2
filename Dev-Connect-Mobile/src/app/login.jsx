@@ -1,4 +1,4 @@
-import { View, Text, Pressable, TextInput } from "react-native";
+import { View, Text, Pressable, TextInput, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import loginStylesFunction from "../styles/loginStyles"
 import { Screen } from "../components/screen";
@@ -15,14 +15,16 @@ import { useState } from "react";
 import { loginScript } from "../scripts/login"
 import { useRef } from "react";
 import { Animated } from "react-native";
+import { startOauth } from "../scripts/githubOauthScript"
 import { Easing } from "react-native";
-import githubOauthScript from "../scripts/githubOauth"
+import githubOauthLogoLight from "../assets/githubOauthLogoLight.png"
+import githubOauthLogoDark from "../assets/githubOauthLogoDark.png"
 
 export default function login() {
 
     const loginStyles = loginStylesFunction()
 
-    const { setTheme } = useContext(ThemeContext)
+    const { theme } = useContext(ThemeContext)
 
     const login = loginScript()
 
@@ -73,14 +75,20 @@ export default function login() {
                         <Text style={loginStyles.loginSubTitle}>Log in to your Dev Connect account to continue.</Text>
                         <View style={loginStyles.loginInputWrapper}>
                             <Text style={loginStyles.inputText}>Email</Text>
-                            <TextInput style={loginStyles.input} onChangeText={setEmail} value={email} autoComplete="email"></TextInput>
+                            <TextInput style={loginStyles.input} onChangeText={setEmail} value={email}></TextInput>
                         </View>
                         <View style={loginStyles.loginInputWrapper}>
                             <Text style={loginStyles.inputText}>Password</Text>
-                            <TextInput style={loginStyles.input} value={password} onChangeText={setPassword} secureTextEntry autoComplete="password"></TextInput>
+                            <TextInput style={loginStyles.input} value={password} onChangeText={setPassword} secureTextEntry></TextInput>
                         </View>
-                        <Pressable style={loginStyles.loginBtn} onPress={() => {githubOauthScript()}} disabled={loading}>
+                        <Pressable style={loginStyles.loginBtn} onPress={() => {login(setLoading, email, password)}} disabled={loading}>
                             { loading === false ? (<Text style={loginStyles.loginBtnText}>Login</Text>) : (<Animated.View style={[ loginStyles.loadingSpinner , { transform: [{rotate}] }]} />)}
+                        </Pressable>
+                        <Pressable onPress={() => {startOauth()}}>
+                            <View style={loginStyles.OauthBtnWrapper}>
+                                <Image source={theme === "light" ? githubOauthLogoLight : githubOauthLogoDark} style={loginStyles.OauthLogo} />
+                                <View style={loginStyles.OauthTextWrapper}><Text style={loginStyles.OauthText}>Continue with Github</Text></View>
+                            </View>
                         </Pressable>
                     </View>
                 </View>
@@ -89,4 +97,3 @@ export default function login() {
         </Screen>
     )
 }
-

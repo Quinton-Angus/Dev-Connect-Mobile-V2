@@ -74,6 +74,7 @@ export default () => {
             justifyContent: "center",
             alignItems: "center",
             marginTop: 10,
+            marginBottom: 50
         },
 
         loginBtnText: {
@@ -89,6 +90,36 @@ export default () => {
             borderColor: colourScheme.contrast,
             borderRadius: 25,
             borderTopColor: colourScheme.background
+        },
+
+        OauthBtnWrapper: {
+            width: "100%",
+            height: 30,
+            backgroundColor: colourScheme.tertiary,
+            borderRadius: 5,
+            justifyContent: "center",
+            alignItems: "flex-start",
+            marginTop: 10,
+            marginBottom: 20,
+            padding: 7.5,
+            flexDirection: "row"
+        },
+
+        OauthLogo: {
+            width: 15,
+            height: 15
+        },
+
+        OauthTextWrapper: {
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center"
+        },
+        
+        OauthText: {
+            fontSize: 10,
+            fontFamily: "inter_regular",
+            color: colourScheme.secondary
         }
 
 
