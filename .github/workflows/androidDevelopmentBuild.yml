@@ -72,12 +72,13 @@ jobs:
       # 7. Install Android SDK requirements
       # --------------------------------------------------
 
-      - name: Install Android SDK components
+      - name: Install Android build requirements
         run: |
-          sdkmanager "platform-tools"
-          sdkmanager "platforms;android-35"
-          sdkmanager "build-tools;35.0.0"
-          sdkmanager "ndk;27.1.12297006"
+          sdkmanager --install \
+            "platform-tools" \
+            "platforms;android-35" \
+            "build-tools;35.0.0" \
+            "ndk;27.1.12297006"
 
 
       # --------------------------------------------------
