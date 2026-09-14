@@ -15,10 +15,13 @@ import { useState } from "react";
 import { loginScript } from "../scripts/login"
 import { useRef } from "react";
 import { Animated } from "react-native";
-import { startOauth } from "../scripts/githubOauthScript"
+import { startOauthGithub } from "../scripts/githubOauthScript"
+import { startOauthGoogle } from "../scripts/googleOauthScript"
 import { Easing } from "react-native";
 import githubOauthLogoLight from "../assets/githubOauthLogoLight.png"
 import githubOauthLogoDark from "../assets/githubOauthLogoDark.png"
+import googleOauthLogoLight from "../assets/googleOauthLogoLight.png"
+import googleOauthLogoDark from "../assets/googleOauthLogoDark.png"
 
 export default function login() {
 
@@ -84,10 +87,16 @@ export default function login() {
                         <Pressable style={loginStyles.loginBtn} onPress={() => {login(setLoading, email, password)}} disabled={loading}>
                             { loading === false ? (<Text style={loginStyles.loginBtnText}>Login</Text>) : (<Animated.View style={[ loginStyles.loadingSpinner , { transform: [{rotate}] }]} />)}
                         </Pressable>
-                        <Pressable onPress={() => {startOauth()}}>
+                        <Pressable onPress={() => {startOauthGithub()}}>
                             <View style={loginStyles.OauthBtnWrapper}>
                                 <Image source={theme === "light" ? githubOauthLogoLight : githubOauthLogoDark} style={loginStyles.OauthLogo} />
                                 <View style={loginStyles.OauthTextWrapper}><Text style={loginStyles.OauthText}>Continue with Github</Text></View>
+                            </View>
+                        </Pressable>
+                        <Pressable onPress={() => {startOauthGoogle()}}>
+                            <View style={loginStyles.OauthBtnWrapper}>
+                                <Image source={theme === "light" ? googleOauthLogoLight : googleOauthLogoDark} style={loginStyles.OauthLogo} />
+                                <View style={loginStyles.OauthTextWrapper}><Text style={loginStyles.OauthText}>Continue with Google</Text></View>
                             </View>
                         </Pressable>
                     </View>

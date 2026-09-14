@@ -100,7 +100,7 @@ export default () => {
             justifyContent: "center",
             alignItems: "flex-start",
             marginTop: 10,
-            marginBottom: 20,
+            marginBottom: 5,
             padding: 7.5,
             flexDirection: "row"
         },
