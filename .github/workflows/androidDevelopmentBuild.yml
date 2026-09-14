@@ -1,153 +1,218 @@
-name: Android Development Build
+name: Build Android Development APK
 
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build Android Development APK
+    name: Build Android development APK
     runs-on: ubuntu-latest
+
+    # EXPO_TOKEN is stored in your GitHub Environment.
     environment: eas-build-enviroment
 
     permissions:
       contents: read
 
     steps:
-
-      # --------------------------------------------------
-      # 1. Download the repository
-      # --------------------------------------------------
-
+      # ------------------------------------------------------------
+      # 1. Checkout repository
+      # ------------------------------------------------------------
       - name: Checkout repository
         uses: actions/checkout@v5
+        with:
+          path: repository
 
-
-      # --------------------------------------------------
-      # 2. Create our build directory
-      # --------------------------------------------------
-
+      # ------------------------------------------------------------
+      # 2. Create build/output directory
+      # ------------------------------------------------------------
       - name: Create build directory
         run: |
           sudo mkdir -p /workDir/build
           sudo chown -R "$USER:$USER" /workDir
 
-
-      # --------------------------------------------------
-      # 3. Copy the repository into /workDir/build
-      # --------------------------------------------------
-
-      - name: Copy repository to build directory
+      # ------------------------------------------------------------
+      # 3. Show initial disk usage
+      # ------------------------------------------------------------
+      - name: Check disk space - initial
         run: |
-          cp -R . /workDir/build/Dev-Connect-Mobile-V2
+          echo "===== DISK SPACE BEFORE CLEANUP ====="
+          df -h
+          echo
+          echo "===== DISK USAGE BY MAJOR DIRECTORIES ====="
+          sudo du -sh /usr/local/* 2>/dev/null | sort -h | tail -20 || true
+          sudo du -sh /opt/* 2>/dev/null | sort -h | tail -20 || true
 
+      # ------------------------------------------------------------
+      # 4. Free space from the GitHub-hosted runner
+      # ------------------------------------------------------------
+      - name: Free disk space
+        run: |
+          echo "Removing unnecessary pre-installed software..."
 
-      # --------------------------------------------------
-      # 4. Set up Node.js
-      # --------------------------------------------------
+          # .NET
+          sudo rm -rf /usr/share/dotnet
 
+          # GHC / Haskell
+          sudo rm -rf /opt/ghc
+
+          # Android emulator system images
+          sudo rm -rf "$ANDROID_SDK_ROOT/system-images" || true
+
+          # PowerShell
+          sudo rm -rf /usr/local/share/powershell
+
+          # Large pre-installed tool caches
+          sudo rm -rf /opt/hostedtoolcache/CodeQL || true
+
+          # Ruby gems cache
+          sudo rm -rf /opt/hostedtoolcache/Ruby || true
+
+          # Clean apt cache
+          sudo apt-get clean
+
+          echo
+          echo "===== DISK SPACE AFTER CLEANUP ====="
+          df -h
+
+      # ------------------------------------------------------------
+      # 5. Setup Node.js
+      # ------------------------------------------------------------
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
           node-version: 20
 
-      # --------------------------------------------------
-      # 5. Set up Java
-      # --------------------------------------------------
-
+      # ------------------------------------------------------------
+      # 6. Setup Java
+      # ------------------------------------------------------------
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 17
+          cache: gradle
 
-      # --------------------------------------------------
-      # 6. Set up Android SDK
-      # --------------------------------------------------
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-
-
-      # --------------------------------------------------
-      # 7. Install Android SDK requirements
-      # --------------------------------------------------
-
-      - name: Install Android build requirements
+      # ------------------------------------------------------------
+      # 7. Check existing Android SDK
+      # ------------------------------------------------------------
+      - name: Check Android SDK
         run: |
-          sdkmanager --install \
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          echo "ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT"
+
+          echo
+          echo "===== SDK ====="
+          ls -la "$ANDROID_SDK_ROOT" || true
+
+          echo
+          echo "===== SDKMANAGER ====="
+          "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --version
+
+      # ------------------------------------------------------------
+      # 8. Install only the Android components we need
+      # ------------------------------------------------------------
+      - name: Install Android SDK components
+        run: |
+          yes | "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" --licenses || true
+
+          "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager" \
             "platform-tools" \
             "platforms;android-35" \
             "build-tools;35.0.0" \
             "ndk;27.1.12297006"
 
-
-      # --------------------------------------------------
-      # 8. Add Android SDK environment variables
-      # --------------------------------------------------
-
+      # ------------------------------------------------------------
+      # 9. Configure Android environment
+      # ------------------------------------------------------------
       - name: Configure Android environment
         run: |
           echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
           echo "$ANDROID_SDK_ROOT/platform-tools" >> "$GITHUB_PATH"
           echo "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
 
+      # ------------------------------------------------------------
+      # 10. Check disk space after Android SDK
+      # ------------------------------------------------------------
+      - name: Check disk space - Android SDK installed
+        run: |
+          echo "===== DISK SPACE ====="
+          df -h
 
-      # --------------------------------------------------
-      # 9. Install EAS CLI
-      # --------------------------------------------------
+          echo
+          echo "===== ANDROID SDK SIZE ====="
+          du -sh "$ANDROID_SDK_ROOT" 2>/dev/null || true
 
+      # ------------------------------------------------------------
+      # 11. Install EAS CLI
+      # ------------------------------------------------------------
       - name: Install EAS CLI
         run: |
           npm install --global eas-cli
 
-
-      # --------------------------------------------------
-      # 10. Install Expo project dependencies
-      # --------------------------------------------------
-
+      # ------------------------------------------------------------
+      # 12. Install project dependencies
+      # ------------------------------------------------------------
       - name: Install dependencies
-        working-directory: /workDir/build/Dev-Connect-Mobile-V2/Dev-Connect-Mobile
+        working-directory: repository/Dev-Connect-Mobile
         run: |
           npm ci
 
-
-      # --------------------------------------------------
-      # 11. Verify the Expo project
-      # --------------------------------------------------
-
-      - name: Check Expo project
-        working-directory: /workDir/build/Dev-Connect-Mobile-V2/Dev-Connect-Mobile
+      # ------------------------------------------------------------
+      # 13. Check project environment
+      # ------------------------------------------------------------
+      - name: Check build environment
+        working-directory: repository/Dev-Connect-Mobile
         run: |
+          echo "===== NODE ====="
           node --version
+
+          echo
+          echo "===== NPM ====="
           npm --version
+
+          echo
+          echo "===== EAS ====="
           eas --version
+
+          echo
+          echo "===== JAVA ====="
           java -version
+
+          echo
+          echo "===== ADB ====="
           adb version
 
+          echo
+          echo "===== DISK SPACE ====="
+          df -h
 
-      # --------------------------------------------------
-      # 12. Authenticate with Expo
-      # --------------------------------------------------
-
+      # ------------------------------------------------------------
+      # 14. Authenticate with Expo
+      # ------------------------------------------------------------
       - name: Authenticate with Expo
-        working-directory: /workDir/build/Dev-Connect-Mobile-V2/Dev-Connect-Mobile
+        working-directory: repository/Dev-Connect-Mobile
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
           eas whoami
 
-
-      # --------------------------------------------------
-      # 13. Build the Android development APK locally
-      # --------------------------------------------------
-
+      # ------------------------------------------------------------
+      # 15. Build locally with EAS
+      # ------------------------------------------------------------
       - name: Build Android development APK
-        working-directory: /workDir/build/Dev-Connect-Mobile-V2/Dev-Connect-Mobile
+        working-directory: repository/Dev-Connect-Mobile
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
           EAS_LOCAL_BUILD_ARTIFACTS_DIR: /workDir/build/artifacts
         run: |
           mkdir -p /workDir/build/artifacts
+
+          echo "===== DISK SPACE BEFORE EAS BUILD ====="
+          df -h
+
+          echo
+          echo "===== STARTING EAS LOCAL BUILD ====="
 
           eas build \
             --platform android \
@@ -156,11 +221,25 @@ jobs:
             --non-interactive \
             --output /workDir/build/dev-connect-development.apk
 
+      # ------------------------------------------------------------
+      # 16. Verify APK exists
+      # ------------------------------------------------------------
+      - name: Verify APK
+        run: |
+          echo "===== BUILD OUTPUT ====="
+          ls -lah /workDir/build/
 
-      # --------------------------------------------------
-      # 14. Upload the APK to GitHub Actions
-      # --------------------------------------------------
+          echo
+          echo "===== APK ====="
+          ls -lh /workDir/build/dev-connect-development.apk
 
+          echo
+          echo "===== FINAL DISK SPACE ====="
+          df -h
+
+      # ------------------------------------------------------------
+      # 17. Upload APK to GitHub Actions
+      # ------------------------------------------------------------
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
