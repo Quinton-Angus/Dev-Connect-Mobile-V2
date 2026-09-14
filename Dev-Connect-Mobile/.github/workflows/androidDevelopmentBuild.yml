@@ -1,0 +1,172 @@
+name: Android Development Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Android Development APK
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+
+      # --------------------------------------------------
+      # 1. Download the repository
+      # --------------------------------------------------
+
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+
+      # --------------------------------------------------
+      # 2. Create our build directory
+      # --------------------------------------------------
+
+      - name: Create build directory
+        run: |
+          sudo mkdir -p /workDir/build
+          sudo chown -R "$USER:$USER" /workDir
+
+
+      # --------------------------------------------------
+      # 3. Copy the repository into /workDir/build
+      # --------------------------------------------------
+
+      - name: Copy repository to build directory
+        run: |
+          cp -R . /workDir/build/Dev-Connect-Mobile-V2
+
+
+      # --------------------------------------------------
+      # 4. Set up Node.js
+      # --------------------------------------------------
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: /workDir/build/Dev-Connect-Mobile-V2/Dev-Connect-Mobile/package-lock.json
+
+
+      # --------------------------------------------------
+      # 5. Set up Java
+      # --------------------------------------------------
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+
+      # --------------------------------------------------
+      # 6. Set up Android SDK
+      # --------------------------------------------------
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+
+      # --------------------------------------------------
+      # 7. Install Android SDK requirements
+      # --------------------------------------------------
+
+      - name: Install Android SDK components
+        run: |
+          sdkmanager "platform-tools"
+          sdkmanager "platforms;android-35"
+          sdkmanager "build-tools;35.0.0"
+          sdkmanager "ndk;27.1.12297006"
+
+
+      # --------------------------------------------------
+      # 8. Add Android SDK environment variables
+      # --------------------------------------------------
+
+      - name: Configure Android environment
+        run: |
+          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
+          echo "$ANDROID_SDK_ROOT/platform-tools" >> "$GITHUB_PATH"
+          echo "$ANDROID_SDK_ROOT/cmdline-tools/latest/bin" >> "$GITHUB_PATH"
+
+
+      # --------------------------------------------------
+      # 9. Install EAS CLI
+      # --------------------------------------------------
+
+      - name: Install EAS CLI
+        run: |
+          npm install --global eas-cli
+
+
+      # --------------------------------------------------
+      # 10. Install Expo project dependencies
+      # --------------------------------------------------
+
+      - name: Install dependencies
+        working-directory: /workDir/build/Dev-Connect-Mobile-V2/Dev-Connect-Mobile
+        run: |
+          npm ci
+
+
+      # --------------------------------------------------
+      # 11. Verify the Expo project
+      # --------------------------------------------------
+
+      - name: Check Expo project
+        working-directory: /workDir/build/Dev-Connect-Mobile-V2/Dev-Connect-Mobile
+        run: |
+          node --version
+          npm --version
+          eas --version
+          java -version
+          adb version
+
+
+      # --------------------------------------------------
+      # 12. Authenticate with Expo
+      # --------------------------------------------------
+
+      - name: Authenticate with Expo
+        working-directory: /workDir/build/Dev-Connect-Mobile-V2/Dev-Connect-Mobile
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          eas whoami
+
+
+      # --------------------------------------------------
+      # 13. Build the Android development APK locally
+      # --------------------------------------------------
+
+      - name: Build Android development APK
+        working-directory: /workDir/build/Dev-Connect-Mobile-V2/Dev-Connect-Mobile
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          EAS_LOCAL_BUILD_ARTIFACTS_DIR: /workDir/build/artifacts
+        run: |
+          mkdir -p /workDir/build/artifacts
+
+          eas build \
+            --platform android \
+            --profile development \
+            --local \
+            --non-interactive \
+            --output /workDir/build/dev-connect-development.apk
+
+
+      # --------------------------------------------------
+      # 14. Upload the APK to GitHub Actions
+      # --------------------------------------------------
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: dev-connect-development-apk
+          path: /workDir/build/dev-connect-development.apk
+          if-no-files-found: error

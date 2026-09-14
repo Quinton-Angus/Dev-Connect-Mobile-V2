@@ -3,7 +3,7 @@
     "name": "Dev Connect",
     "slug": "Dev-Connect",
     "scheme": "devconnect",
-    "version": "1.3.0",
+    "version": "1.3.1",
     "orientation": "portrait",
     "icon": "./src/assets/app_icon.png",
     "backgroundColor": "#080808",
