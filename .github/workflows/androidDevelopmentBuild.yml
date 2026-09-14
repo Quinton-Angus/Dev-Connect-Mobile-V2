@@ -58,8 +58,6 @@ jobs:
         with:
           distribution: temurin
           java-version: 17
-          cache: gradle
-
 
       # --------------------------------------------------
       # 6. Set up Android SDK
