@@ -48,9 +48,6 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: /workDir/build/Dev-Connect-Mobile-V2/Dev-Connect-Mobile/package-lock.json
-
 
       # --------------------------------------------------
       # 5. Set up Java
